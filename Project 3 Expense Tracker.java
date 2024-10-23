@@ -21,14 +21,6 @@ class User {
 
 class Expense {
     private String date;
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     private String category;
     private double amount;
 
@@ -36,6 +28,10 @@ class Expense {
         this.date = date;
         this.category = category;
         this.amount = amount;
+    }
+
+    public String getDate() {
+        return date;
     }
 
     public String getCategory() {
@@ -126,41 +122,103 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         ExpenseTracker tracker = new ExpenseTracker();
 
-        // Register user
-        System.out.println("Register a new user");
-        System.out.print("Username: ");
-        String username = scanner.nextLine();
-        System.out.print("Password: ");
-        String password = scanner.nextLine();
-        tracker.register(username, password);
+        while (true) {
+            System.out.println("Welcome to Expense Tracker");
+            System.out.println("1. Register as New User");
+            System.out.println("2. Login as Existing User");
+            System.out.println("3. Exit");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
 
-        // Login user
-        System.out.println("Login");
-        System.out.print("Username: ");
-        username = scanner.nextLine();
-        System.out.print("Password: ");
-        password = scanner.nextLine();
-        if (!tracker.login(username, password)) {
-            System.out.println("Exiting...");
-            return;
+            if (choice == 1) {
+                // Register user
+                System.out.println("Register a new user");
+                System.out.print("Username: ");
+                String username = scanner.nextLine();
+                System.out.print("Password: ");
+                String password = scanner.nextLine();
+                tracker.register(username, password);
+            } else if (choice == 2) {
+                // Login user
+                System.out.println("Login");
+                System.out.print("Username: ");
+                String username = scanner.nextLine();
+                System.out.print("Password: ");
+                String password = scanner.nextLine();
+                if (!tracker.login(username, password)) {
+                    System.out.println("Exiting...");
+                    return;
+                }
+
+                // Input for expenses
+                while (true) {
+                    System.out.println("1. Add Expense");
+                    System.out.println("2. List Expenses");
+                    System.out.println("3. Category-wise Summation");
+                    System.out.println("4. Save Expenses to File");
+                    System.out.println("5. Load Expenses from File");
+                    System.out.println("6. Logout");
+                    System.out.print("Choose an option: ");
+                    int userChoice = scanner.nextInt();
+                    scanner.nextLine(); // Consume newline
+
+                    switch (userChoice) {
+                        case 1:
+                            // Add expenses
+                            System.out.print("Enter Date (YYYY-MM-DD): ");
+                            String date = scanner.nextLine();
+                            System.out.print("Enter Category: ");
+                            String category = scanner.nextLine();
+                            System.out.print("Enter Amount: ");
+                            double amount = scanner.nextDouble();
+                            scanner.nextLine(); // Consume newline
+                            tracker.addExpense(date, category, amount);
+                            break;
+                        case 2:
+                            // List expenses
+                            tracker.listExpenses();
+                            break;
+                        case 3:
+                            // Category-wise summation
+                            tracker.categoryWiseSummation();
+                            break;
+                        case 4:
+                            // Save expenses
+                            try {
+                                tracker.saveExpenses("expenses.txt");
+                            } catch (IOException e) {
+                                System.out.println("An error occurred while saving expenses.");
+                            }
+                            break;
+                        case 5:
+                            // Load expenses
+                            try {
+                                tracker.loadExpenses("expenses.txt");
+                            } catch (IOException e) {
+                                System.out.println("An error occurred while loading expenses.");
+                            }
+                            break;
+                        case 6:
+                            // Logout
+                            System.out.println("Logging out...");
+                            break;
+                        default:
+                            System.out.println("Invalid option. Please try again.");
+                    }
+
+                    if (userChoice == 6) {
+                        break; // Exit the expense management menu
+                    }
+                }
+            } else if (choice == 3) {
+                System.out.println("Exiting...");
+                break;
+            } else {
+                System.out.println("Invalid option. Please try again.");
+            }
         }
 
-        // Add expenses
-        tracker.addExpense("2024-10-12", "Food", 20.5);
-        tracker.addExpense("2024-10-13", "Transport", 15.0);
-
-        // List expenses
-        tracker.listExpenses();
-
-        // Category-wise summation
-        tracker.categoryWiseSummation();
-
-        // Save and load from file
-        try {
-            tracker.saveExpenses("expenses.txt");
-            tracker.loadExpenses("expenses.txt");
-        } catch (IOException e) {
-            System.out.println("An error occurred while saving/loading expenses.");
-        }
+        scanner.close();
     }
 }
