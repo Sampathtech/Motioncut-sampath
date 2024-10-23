@@ -257,7 +257,11 @@ public class Main {
     public static void main(String[] args) {
         JFrame obj = new JFrame();
         BrickBreakerGame gamePlay = new BrickBreakerGame();
-        obj.setBounds(10, 10, 700, 600);
-        obj.setTitle("Brick Buster");
-        obj.setResizable(false);
-        obj.set
+        obj.setBounds(10, 10, 700, 600);  // Set the window size
+        obj.setTitle("Brick Buster");     // Set the window title
+        obj.setResizable(false);          // Make sure the window size is not adjustable
+        obj.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ensure the program closes when the window is closed
+        obj.add(gamePlay);                // Add the game panel to the frame
+        obj.setVisible(true);             // Make the window visible
+    }
+}
